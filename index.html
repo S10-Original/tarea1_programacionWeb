@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trabajadores</title>
+    <link rel="stylesheet" href="styles.css">
+    <!--
+       Dado el siguiente conjunto de datos relativos a 5 empleados de una empresa:
+       *Nombre y Apellido
+       *Edad de la persona
+       *Estado civil:
+            -Soltero(a)
+            -Casado(a)
+            -Viudo(a)
+        *Sexo
+            -Femenino
+            -Masculino
+        *Sueldo
+            -Menos de 1000 Bs
+            -Entre 1000 y 2500 Bs
+            -Más de 2500 Bs
+
+        Se pide desarrollar un programa que permita el ingreso de los datos antes mencionados para determinar
+        los siguietes puntos:
+        *Total de empleados del sexo femenino.
+        *Total de hombres casados que ganan más de 2500 Bs
+        *Total de mujeres viudas que ganan más de 1000 Bs
+        *Edad promedio de los hombres.
+    -->
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById("calcularButton").addEventListener("click", calcularResultados);
+            document.getElementById("mostrarListaButton").addEventListener("click", mostrarListaEmpleados);
+        });
+
+        function calcularResultados() {
+            var totalFemenino = 0;
+            var totalHombresCasados = 0;
+            var totalMujeresViudas = 0;
+            var sumaEdadHombres = 0;
+            var totalHombres = 0;
+
+            var empleados = obtenerDatosEmpleados();
+
+            empleados.forEach(function(empleado) {
+                if (empleado.sexo === "Femenino") {
+                    totalFemenino++;
+                }
+
+                if (empleado.sexo === "Masculino" && empleado.estadoCivil === "Casado(a)" && empleado.sueldo === "Mas de 2500 Bs.") {
+                    totalHombresCasados++;
+                }
+
+                if (empleado.sexo === "Femenino" && empleado.estadoCivil === "Viudo(a)" && empleado.sueldo === "Mas de 2500 Bs.") {
+                    totalMujeresViudas++;
+                }
+
+                if (empleado.sexo === "Femenino" && empleado.estadoCivil === "Viudo(a)" && empleado.sueldo === "Entre 1000 y 2500 Bs.") {
+                    totalMujeresViudas++;
+                }
+
+                if (empleado.sexo === "Masculino") {
+                    sumaEdadHombres += empleado.edad;
+                    totalHombres++;
+                }
+            });
+
+            var promedioEdadHombres = totalHombres > 0 ? sumaEdadHombres / totalHombres : 0;
+
+            mostrarResultados({
+                totalFemenino: totalFemenino,
+                totalHombresCasados: totalHombresCasados,
+                totalMujeresViudas: totalMujeresViudas,
+                promedioEdadHombres: promedioEdadHombres,
+                empleados: empleados
+            });
+        }
+
+        function obtenerDatosEmpleados() {
+            var empleados = [];
+
+            for (var i = 1; i <= 5; i++) {
+                var nombre = document.getElementById("nombre" + i).value;
+                var edad = parseInt(document.getElementById("edad" + i).value);
+                var estadoCivil = document.getElementById("estadoCivil" + i).value;
+                var sexo = document.getElementById("sexoFemenino" + i).value;
+                var sueldo = document.getElementById("sueldo" + i).value;
+
+                var empleado = {
+                    nombre: nombre,
+                    edad: edad,
+                    estadoCivil: estadoCivil,
+                    sexo: sexo,
+                    sueldo: sueldo
+                };
+
+                empleados.push(empleado);
+            }
+
+            return empleados;
+        }
+
+        function mostrarResultados(resultados) {
+            document.getElementById("totalFemenino").textContent = resultados.totalFemenino;
+            document.getElementById("totalHombresCasados").textContent = resultados.totalHombresCasados;
+            document.getElementById("totalMujeresViudas").textContent = resultados.totalMujeresViudas;
+            document.getElementById("promedioEdadHombres").textContent = resultados.promedioEdadHombres;
+        }
+
+        function mostrarListaEmpleados() {
+            var listaEmpleados = document.getElementById("listaEmpleados");
+            listaEmpleados.innerHTML = ""; // Limpiar la lista antes de agregar nuevos elementos
+
+            var empleados = obtenerDatosEmpleados();
+
+            empleados.forEach(function(empleado) {
+                var item = document.createElement("li");
+                item.textContent = empleado.nombre + " - " + empleado.sexo + " - " + empleado.estadoCivil + " - " + empleado.sueldo;
+                listaEmpleados.appendChild(item);
+            });
+        }
+    </script>
+</head>
+<body>
+    <center><h1>Tarea 1</h1></center>
+    <h2>Ingresar los datos solicitados:</h2>
+
+    <form>
+        <div class="wrapper">
+            <div>
+                <h3>Empleado 1</h3>
+                <label for="nombre1">Nombre y Apellido:</label>
+                <input type="text" id="nombre1" required pattern="[a-zA-Z\s]+" title="Ingrese solo letras y espacios"><br>
+
+                <label for="edad1">Edad:</label>
+                <input type="number" id="edad1" required min="18"><br>
+
+                <label for="estadoCivil1">Estado Civil:</label>
+                <select id="estadoCivil1" required>
+                    <option value="Soltero(a)">Soltero(a)</option>
+                    <option value="Casado(a)">Casado(a)</option>
+                    <option value="Viudo(a)">Viudo(a)</option>  
+                </select><br>
+
+                <label for="sexoFemenino1">Genero:</label>
+                <select id="sexoFemenino1" required>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                </select><br>
+
+                <label for="sueldo1">Sueldo:</label>
+                <select id="sueldo1" required>
+                    <option value="Menos de 1000 Bs.">Menos de 1000 Bs.</option>
+                    <option value="Entre 1000 y 2500 Bs.">Entre 1000 y 2500 Bs.</option>
+                    <option value="Mas de 2500 Bs.">Mas de 2500 Bs.</option>
+                </select><br><br><br>
+            </div>
+            <div>
+                <h3>Empleado 2</h3>
+                <label for="nombre1">Nombre y Apellido:</label>
+                <input type="text" id="nombre2" required pattern="[a-zA-Z\s]+" title="Ingrese solo letras y espacios"><br>
+
+                <label for="edad1">Edad:</label>
+                <input type="number" id="edad2" required min="18"><br>
+
+                <label for="estadoCivil2">Estado Civil:</label>
+                <select id="estadoCivil2" required>
+                    <option value="Soltero(a)">Soltero(a)</option>
+                    <option value="Casado(a)">Casado(a)</option>
+                    <option value="Viudo(a)">Viudo(a)</option>
+                </select><br>
+
+                <label for="sexoFemenino2">Genero:</label>
+                <select id="sexoFemenino2" required>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                </select><br>
+
+                <label for="sueldo2">Sueldo:</label>
+                <select id="sueldo2" required>
+                    <option value="Menos de 1000 Bs.">Menos de 1000 Bs.</option>
+                    <option value="Entre 1000 y 2500 Bs.">Entre 1000 y 2500 Bs.</option>
+                    <option value="Mas de 2500 Bs.">Mas de 2500 Bs.</option>
+                </select><br><br><br>
+            </div>
+            <div>
+                <h3>Empleado 3</h3>
+                <label for="nombre3">Nombre y Apellido:</label>
+                <input type="text" id="nombre3" required pattern="[a-zA-Z\s]+" title="Ingrese solo letras y espacios"><br>
+
+                <label for="edad1">Edad:</label>
+                <input type="number" id="edad3" required min="18"><br>
+
+                <label for="estadoCivil3">Estado Civil:</label>
+                <select id="estadoCivil3" required>
+                    <option value="Soltero(a)">Soltero(a)</option>
+                    <option value="Casado(a)">Casado(a)</option>
+                    <option value="Viudo(a)">Viudo(a)</option>
+                </select><br>
+
+                <label for="sexoFemenino3">Genero:</label>
+                <select id="sexoFemenino3" required>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                </select><br>
+
+                <label for="sueldo3">Sueldo:</label>
+                <select id="sueldo3" required>
+                    <option value="Menos de 1000 Bs.">Menos de 1000 Bs.</option>
+                    <option value="Entre 1000 y 2500 Bs.">Entre 1000 y 2500 Bs.</option>
+                    <option value="Mas de 2500 Bs.">Mas de 2500 Bs.</option>
+                </select><br><br><br>
+            </div>
+            <div>
+                <h3>Empleado 4</h3>
+                <label for="nombre4">Nombre y Apellido:</label>
+                <input type="text" id="nombre4" required pattern="[a-zA-Z\s]+" title="Ingrese solo letras y espacios"><br>
+
+                <label for="edad4">Edad:</label>
+                <input type="number" id="edad4" required min="18"><br>
+
+                <label for="estadoCivil4">Estado Civil:</label>
+                <select id="estadoCivil4" required>
+                    <option value="Soltero(a)">Soltero(a)</option>
+                    <option value="Casado(a)">Casado(a)</option>
+                    <option value="Viudo(a)">Viudo(a)</option>
+                </select><br>
+
+                <label for="sexoFemenino4">Genero:</label>
+                <select id="sexoFemenino4" required>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                </select><br>
+
+                <label for="sueldo4">Sueldo:</label>
+                <select id="sueldo4" required>
+                    <option value="Menos de 1000 Bs.">Menos de 1000 Bs.</option>
+                    <option value="Entre 1000 y 2500 Bs.">Entre 1000 y 2500 Bs.</option>
+                    <option value="Mas de 2500 Bs.">Mas de 2500 Bs.</option>
+                </select><br><br><br>
+            </div>
+            <div>
+                <h3>Empleado 5</h3>
+                <label for="nombre5">Nombre y Apellido:</label>
+                <input type="text" id="nombre5" required pattern="[a-zA-Z\s]+" title="Ingrese solo letras y espacios"><br>
+
+                <label for="edad5">Edad:</label>
+                <input type="number" id="edad5" required min="18"><br>
+
+                <label for="estadoCivil5">Estado Civil:</label>
+                <select id="estadoCivil5" required>
+                    <option value="Soltero(a)">Soltero(a)</option>
+                    <option value="Casado(a)">Casado(a)</option>
+                    <option value="Viudo(a)">Viudo(a)</option>
+                </select><br>
+
+                <label for="sexoFemenino5">Genero:</label>
+                <select id="sexoFemenino5" required>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                </select><br>
+
+                <label for="sueldo5">Sueldo:</label>
+                <select id="sueldo5" required>
+                    <option value="Menos de 1000 Bs.">Menos de 1000 Bs.</option>
+                    <option value="Entre 1000 y 2500 Bs.">Entre 1000 y 2500 Bs.</option>
+                    <option value="Mas de 2500 Bs.">Mas de 2500 Bs.</option>
+                </select><br>
+
+                <button type="button" id="calcularButton" class="boton-calcular">Calcular</button><br><br>
+            </div>
+            <div>
+                <h2>Resultados:</h2>
+                <p>Total de empleados del sexo femenino: <span id="totalFemenino"></span></p>
+                <p>Total de hombres casados que ganan mas de 2500 Bs.: <span id="totalHombresCasados"></span></p>
+                <p>Total de mujeres viudas que ganan mas de 1000 Bs.: <span id="totalMujeresViudas"></span></p>
+                <p>Edad promedio de los hombres: <span id="promedioEdadHombres"></span></p>
+            </div>
+        </div>
+        
+    </form>
+
+    <hr>
+    <div>
+        <h2>Lista de empleados:</h2>
+        <ul id="listaEmpleados"></ul>
+    
+        <button type="button" id="mostrarListaButton">Mostrar lista de empleados</button>
+    </div>
+    
+</body>
+</html>
